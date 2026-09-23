@@ -25,7 +25,7 @@ def tg(method, **data):
 
 
 def card_files():
-    # Карточки лежат прямо в корне репозитория: 1.png … 11.png
+    # Карточки лежат прямо в корне репозитория: 1.png … 111.png
     return [
         os.path.join(BASE_DIR, f"{i}.png")
         for i in range(1, 12)
