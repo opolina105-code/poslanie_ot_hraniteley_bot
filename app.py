@@ -25,13 +25,11 @@ def tg(method, **data):
 
 
 def card_files():
-    # Карточки лежат прямо в корне репозитория: 1.png … 111.png
     return [
-        os.path.join(BASE_DIR, f"{i}.png")
-        for i in range(1, 12)
-        if os.path.isfile(os.path.join(BASE_DIR, f"{i}.png"))
+        os.path.join(BASE_DIR, f)
+        for f in os.listdir(BASE_DIR)
+        if f.lower().endswith(".png") and f[:-4].isdigit()
     ]
-
 
 def tg_photo(chat_id, path):
     filename = os.path.basename(path)
