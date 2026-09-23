@@ -20,10 +20,10 @@ def webapp():
 
 def tg(method, **data):
     r = requests.post(f"{API}/{method}", data=data, timeout=30)
-   if not r.ok:
-    raise Exception(r.text)
+    if not r.ok:
+        raise Exception(r.text)
 
-return r.json()
+    return r.json()
 
 
 def card_files():
