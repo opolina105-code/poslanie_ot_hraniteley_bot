@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Послание от Хранителей</title>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -16,81 +15,86 @@
       margin: 0;
       width: 100%;
       min-height: 100%;
-      background: #08090d;
-      color: #f1eee8;
-      font-family: Georgia, "Times New Roman", serif;
+      background: #050609;
     }
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      background:
-        radial-gradient(circle at 50% 35%, #20232d 0%, #0c0e14 42%, #050609 100%);
+      overflow: hidden;
+      position: relative;
     }
 
-    .space {
-      width: 100%;
-      max-width: 430px;
-      text-align: center;
+    /* Размытый фон из самой карточки */
+    #background {
+      position: fixed;
+      inset: -40px;
+      width: calc(100% + 80px);
+      height: calc(100% + 80px);
+      object-fit: cover;
+      filter: blur(35px);
+      opacity: 0.28;
+      transform: scale(1.08);
     }
 
-    .title {
-      font-size: 15px;
-      letter-spacing: 5px;
-      margin-bottom: 28px;
-      color: #c9c6c0;
+    /* Затемнение поверх фона */
+    #veil {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 4, 7, 0.45);
     }
 
-    .message {
-      font-size: 25px;
-      line-height: 1.35;
-      letter-spacing: 0.5px;
-      color: #f4f0e9;
-      margin-bottom: 30px;
+    /* Сама карточка */
+    #card {
+      position: relative;
+      z-index: 2;
+      display: block;
+      width: min(92vw, 92vh);
+      max-width: 620px;
+      max-height: 92dvh;
+      height: auto;
+      object-fit: contain;
+
+      border-radius: 3px;
+
+      box-shadow:
+        0 0 45px rgba(255, 255, 255, 0.08),
+        0 20px 70px rgba(0, 0, 0, 0.55);
+
+      opacity: 0;
+      transform: scale(0.97);
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s ease;
     }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #050609;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#card {
-  display: block;
-  width: min(100vw, 100vh);
-  height: auto;
-  max-width: 100%;
-  max-height: 100vh;
-  object-fit: contain;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-    .hint {
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: #85858b;
+    #card.show {
+      opacity: 1;
+      transform: scale(1);
     }
   </style>
 </head>
 
 <body>
 
+  <img id="background" alt="">
+  <div id="veil"></div>
   <img id="card" alt="Послание">
 
   <script>
     const card = document.getElementById("card");
+    const background = document.getElementById("background");
 
-    card.src = "/random-card?" + Date.now();
+    const imageUrl = "/random-card?" + Date.now();
+
+    background.src = imageUrl;
+    card.src = imageUrl;
 
     card.onload = () => {
-      card.style.opacity = "1";
+      card.classList.add("show");
     };
   </script>
 
