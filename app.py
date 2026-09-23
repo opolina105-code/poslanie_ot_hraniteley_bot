@@ -58,7 +58,10 @@ def tg_photo(chat_id, path):
 
 def button():
     return {"inline_keyboard": [[
-        {"text": "🪽 Получить послание", "callback_data": "draw"}
+        {
+            "text": "🪽 Получить послание",
+            "url": "https://t.me/poslanie_ot_hraniteley_bot/poslanie"
+        }
     ]]}
 
 
