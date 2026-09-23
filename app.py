@@ -69,26 +69,42 @@ def button():
 def guardians():
     return send_from_directory(BASE_DIR, "guardians.png")
 
-@app.get("/publish") 
+@app.get("/publish")
 def publish():
-    tg(
-        "sendPhoto",
-        chat_id="@soulvoiceeee",
-        photo=f"{PUBLIC_URL}/guardians.png",
-        caption="""<i>Я тестирую для вас новый формат</i> — <b>«Послания от Хранителей».</b>
+    path = os.path.join(BASE_DIR, "guardians.png")
+
+    with open(path, "rb") as photo:
+        r = requests.post(
+            f"{API}/sendPhoto",
+            data={
+                "chat_id": "@soulvoiceeee",
+                "caption": """<i>Я тестирую для вас новый формат</i> — <b>«Послания от Хранителей».</b>
 
 💫 Здесь <b>можно остановиться на мгновение</b> и задать вопрос, который вас волнует, получить <i>знак, которого не хватало</i> или просто услышать слова поддержки.
 
 <b>Не обязательно искать в нём прямой ответ — достаточно почувствовать отклик.</b> 🌌
 
 <i>Буду рада, если это послание окажется для вас в нужное время.</i>""",
-        parse_mode="HTML",
-        reply_markup=json.dumps(button(), ensure_ascii=False),
-    )
+                "parse_mode": "HTML",
+                "reply_markup": json.dumps(
+                    button(),
+                    ensure_ascii=False
+                ),
+            },
+            files={
+                "photo": (
+                    "guardians.png",
+                    photo,
+                    "image/png"
+                )
+            },
+            timeout=60,
+        )
 
-    return "Пост опубликован"
+    if not r.ok:
+        raise Exception(r.text)
 
-
+    return jsonify(r.json())
 @app.get("/")
 def health():
     return "Хранитель уже летит 🪽"
