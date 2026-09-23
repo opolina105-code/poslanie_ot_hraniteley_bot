@@ -29,8 +29,8 @@ def card_files():
         os.path.join(BASE_DIR, f)
         for f in os.listdir(BASE_DIR)
         if f.lower().endswith(".png") and f[:-4].isdigit()
-    ]
-    @app.get("/random-card")
+]
+@app.get("/random-card")
 def random_card():
     files = card_files()
 
