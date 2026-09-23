@@ -30,7 +30,19 @@ def card_files():
         for f in os.listdir(BASE_DIR)
         if f.lower().endswith(".png") and f[:-4].isdigit()
     ]
+    @app.get("/random-card")
+def random_card():
+    files = card_files()
 
+    if not files:
+        return "Карточки не найдены", 404
+
+    path = random.choice(files)
+
+    return send_from_directory(
+        BASE_DIR,
+        os.path.basename(path)
+    )
 def tg_photo(chat_id, path):
     filename = os.path.basename(path)
     with open(path, "rb") as photo:
