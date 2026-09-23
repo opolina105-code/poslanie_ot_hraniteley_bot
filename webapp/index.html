@@ -67,13 +67,23 @@
     <div class="title">ПОСЛАНИЕ ОТ ХРАНИТЕЛЕЙ</div>
 
     <div class="message">
-      Остановись на мгновение…
-    </div>
+  <img id="card" src="" alt="Послание">
+</div>
 
     <div class="hint">
       ЗАГАДАЙ ВНУТРИ СЕБЯ ТО, ЧТО СЕЙЧАС ВАЖНО
     </div>
   </div>
 
-</body>
+<script>
+  const card = document.getElementById("card");
+
+  card.src = "/random-card?" + Date.now();
+
+  card.style.width = "100%";
+  card.style.maxWidth = "430px";
+  card.style.height = "auto";
+  card.style.display = "block";
+  card.style.margin = "0 auto";
+</script> /body>
 </html>
