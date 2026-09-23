@@ -55,7 +55,7 @@ def telegram():
             callback_query_id=callback["id"]
         )
 
-        with open("cards/01.png", "rb") as photo:
+        with open("01.png", "rb") as photo:
             requests.post(
                 f"{API}/sendPhoto",
                 data={"chat_id": chat_id},
