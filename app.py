@@ -1,15 +1,11 @@
-import os, random, requests
+import os
+import requests
 from flask import Flask, request, jsonify, send_from_directory
 
 TOKEN = os.environ["BOT_TOKEN"]
-PUBLIC_URL = os.environ["PUBLIC_URL"].rstrip("/")
 API = f"https://api.telegram.org/bot{TOKEN}"
 
 app = Flask(__name__)
-
-MESSAGES = [
-    "С тобой всё так.\n\nТы просто идёшь своим путём, а не тем, который от тебя ждали.\n\nНе сравнивай свою дорогу с чужой.",
-]
 
 def tg(method, **data):
     r = requests.post(f"{API}/{method}", data=data, timeout=30)
@@ -23,48 +19,56 @@ def button():
         ]]
     }
 
-@app.get("/")
+@app.route("/")
 def health():
     return "Хранитель работает 🪽"
 
-@app.get("/cards/<path:filename>")
+@app.route("/cards/<filename>")
 def card(filename):
     return send_from_directory("cards", filename)
 
-@app.post("/telegram")
+@app.route("/telegram", methods=["POST"])
 def telegram():
-    update = request.get_json(silent=True) or {}
+    update = request.get_json(force=True)
 
-    # /start
-    msg = update.get("message")
-    if msg:
-        chat_id = msg["chat"]["id"]
+    if "message" in update:
+        chat_id = update["message"]["chat"]["id"]
+
         tg(
             "sendMessage",
             chat_id=chat_id,
-            text="🪽\n\nОстановись на мгновение.\nЗагадай внутри себя то, что сейчас важно.\n\nКогда будешь готова — нажми кнопку.",
-            reply_markup=__import__("json").dumps(button(), ensure_ascii=False)
+            text=(
+                "🪽\n\n"
+                "Остановись на мгновение.\n"
+                "Загадай внутри себя то, что сейчас важно.\n\n"
+                "Когда будешь готова — нажми кнопку."
+            ),
+            reply_markup=str(button()).replace("'", '"')
         )
-        return jsonify(ok=True)
 
-    # button press
-    cq = update.get("callback_query")
-    if cq:
-        chat_id = cq["message"]["chat"]["id"]
-        tg("answerCallbackQuery", callback_query_id=cq["id"])
+    if "callback_query" in update:
+        callback = update["callback_query"]
+        chat_id = callback["message"]["chat"]["id"]
 
-        # Пока одна тестовая карточка. После подключения заменим на все 30.
-        url = f"{PUBLIC_URL}/cards/01.png"
-        tg("sendPhoto", chat_id=chat_id, photo=url)
-        return jsonify(ok=True)
+        tg(
+            "answerCallbackQuery",
+            callback_query_id=callback["id"]
+        )
+
+        with open("cards/01.png", "rb") as photo:
+            requests.post(
+                f"{API}/sendPhoto",
+                data={"chat_id": chat_id},
+                files={"photo": photo},
+                timeout=30
+            )
 
     return jsonify(ok=True)
 
-@app.get("/set-webhook")
+@app.route("/set-webhook")
 def set_webhook():
-    result = tg("setWebhook", url=f"{PUBLIC_URL}/telegram")
-    return jsonify(result)
+    url = os.environ["PUBLIC_URL"] + "/telegram"
+    return jsonify(tg("setWebhook", url=url))
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", "10000"))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=10000)
