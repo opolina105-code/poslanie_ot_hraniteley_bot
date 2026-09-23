@@ -59,11 +59,12 @@ def telegram():
     if msg:
         chat_id = msg["chat"]["id"]
         tg(
-            "sendMessage",
-            chat_id=chat_id,
-            text="*Остановись на мгновение…*\n\n***Загадай внутри себя*** то, что сейчас важно. ✨",
-            reply_markup=json.dumps(button(), ensure_ascii=False),
-        )
+    "sendMessage",
+    chat_id=chat_id,
+    text="*Остановись на мгновение…*  \n***Загадай внутри себя*** то, что сейчас важно. ✨",
+    parse_mode="Markdown",
+    reply_markup=json.dumps(button(), ensure_ascii=False),
+)
         return jsonify(ok=True)
 
     cq = update.get("callback_query")
