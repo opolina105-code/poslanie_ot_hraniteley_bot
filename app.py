@@ -63,8 +63,11 @@ def button():
             "url": "https://t.me/poslanie_ot_hraniteley_bot/poslanie"
         }
     ]]}
+@app.get("/guardians.png")
+def guardians():
+    return send_from_directory(BASE_DIR, "guardians.png")
 
-@app.get("/publish")
+@app.get("/publish") 
 def publish():
     tg(
         "sendPhoto",
