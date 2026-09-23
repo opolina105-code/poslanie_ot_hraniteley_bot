@@ -85,7 +85,7 @@ def telegram():
 
     cq = update.get("callback_query")
     if cq:
-        chat_id = cq["message"]["chat"]["id"]
+        chat_id = cq["from"]["id"]
         tg("answerCallbackQuery", callback_query_id=cq["id"])
 
         files = card_files()
