@@ -61,7 +61,7 @@ def telegram():
         tg(
     "sendMessage",
     chat_id=chat_id,
-    text="<i>Остановись на мгновение…</i>\n\n<b>Загадай внутри себя</b> то, что сейчас важно. ✨",
+    text="<i>Остановись на мгновение…</i>\n\n<b>Загадай внутри себя то</b>, что сейчас важно. ✨",
     parse_mode="HTML",
     reply_markup=json.dumps(button(), ensure_ascii=False),
 )
