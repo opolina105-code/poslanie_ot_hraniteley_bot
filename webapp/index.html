@@ -52,6 +52,25 @@
       margin-bottom: 30px;
     }
 
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #050609;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#card {
+  display: block;
+  width: min(100vw, 100vh);
+  height: auto;
+  max-width: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
     .hint {
       font-family: Arial, sans-serif;
       font-size: 12px;
