@@ -2,15 +2,19 @@ import os
 import random
 import json
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 
 TOKEN = os.environ["BOT_TOKEN"]
 PUBLIC_URL = (os.environ.get("PUBLIC_URL") or os.environ.get("RENDER_EXTERNAL_URL") or "").rstrip("/")
 API = f"https://api.telegram.org/bot{TOKEN}"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-app = Flask(__name__)
-
+app = Flask(__name__)@app.get("/webapp")
+def webapp():
+    return send_from_directory(
+        os.path.join(BASE_DIR, "webapp"),
+        "index.html"
+    )
 
 def tg(method, **data):
     r = requests.post(f"{API}/{method}", data=data, timeout=30)
